@@ -9,7 +9,11 @@ var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
 var runner            = require('./test-runner');
 
+//require helmet to add security features
+var helmet = require('helmet');
+
 var app = express();
+
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -17,6 +21,12 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//prevent client from trying to guess the MIME type
+app.use(helmet.noSniff());
+
+//prevent cross-site scripting XSS attacks
+app.use(helmet.xssFilter());
 
 //Index page (static HTML)
 app.route('/')
